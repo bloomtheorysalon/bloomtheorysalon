@@ -1,0 +1,6 @@
+{
+  "name": "Bloom Theory Salon",
+  "description": "Luxury salon website for Bloom Theory with service menu for men and women, online appointment booking via WhatsApp, AI beauty chatbot, real-time availability calendar, map directions, and admin access.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

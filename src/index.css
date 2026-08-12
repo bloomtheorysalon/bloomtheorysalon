@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #FDFBF7;
+    color: #1A1A1A;
+  }
+
+  .font-serif {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+/* Custom Editorial Dotted Leader for Service Menu */
+.border-dotted-leader {
+  border-bottom: 1px dotted #CBD5E1;
+}
+
+/* Hide scrollbars for clean editorial look */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
