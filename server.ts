@@ -78,7 +78,7 @@ async function startServer() {
   // API Route: Chatbot for beauty suggestions and salon inquiries
   app.post("/api/chat", async (req, res) => {
     try {
-      const { message, history, mistralApiKey } = req.body;
+      const { message, history } = req.body;
 
       if (!message) {
         return res.status(400).json({ error: "Message is required" });
@@ -100,11 +100,8 @@ Instructions:
 - Guide the user on how to book an appointment directly through the website or via WhatsApp at 8977774224.
 - Provide clear answers about service prices and location.`;
 
-      const mistralKeyToUse = (mistralApiKey && mistralApiKey.trim() !== "") 
-        ? mistralApiKey.trim() 
-        : process.env.MISTRAL_API_KEY;
-
-      const requestedModel = req.body.mistralModel || "mistral-small-latest";
+      const mistralKeyToUse = process.env.MISTRAL_API_KEY;
+      const requestedModel = process.env.MISTRAL_MODEL || "mistral-small-latest";
 
       // Service catalogue for recommendation matching
       const SAMPLE_RECOMMENDABLE_SERVICES = [
@@ -150,7 +147,7 @@ Instructions:
         return ["Haircut & Styling prices", "O3+ Facial details", "Salon location & map", "Book an appointment"];
       };
 
-      // 1. Try Mistral AI if key provided by user or environment
+      // 1. Try Mistral AI when it is configured on the server.
       if (mistralKeyToUse && mistralKeyToUse.trim() !== "") {
         try {
           const mistralResponse = await fetch("https://api.mistral.ai/v1/chat/completions", {
