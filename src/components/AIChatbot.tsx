@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Sparkles, Bot, User, Check, RefreshCw, Volume2, VolumeX, Plus, Calendar, MapPin, Phone, SlidersHorizontal, ChevronRight, ShoppingBag, ExternalLink } from 'lucide-react';
 import { AIChatMessage, ServiceItem } from '../types';
+import { apiUrl } from '../api';
 
 interface AIChatbotProps {
   gender: string;
@@ -83,7 +84,7 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ gender, onSelectService, o
     setLoading(true);
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch(apiUrl('/api/chat'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
