@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, X, Send, Sparkles, Key, Bot, User, Check, RefreshCw, Volume2, VolumeX, Plus, Calendar, MapPin, Phone, SlidersHorizontal, ChevronRight, ShoppingBag, ExternalLink } from 'lucide-react';
+import { MessageSquare, X, Send, Sparkles, Bot, User, Check, RefreshCw, Volume2, VolumeX, Plus, Calendar, MapPin, Phone, SlidersHorizontal, ChevronRight, ShoppingBag, ExternalLink } from 'lucide-react';
 import { AIChatMessage, ServiceItem } from '../types';
 
 interface AIChatbotProps {
@@ -30,15 +30,9 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ gender, onSelectService, o
     },
   ]);
   const [loading, setLoading] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
   const [speakingMsgId, setSpeakingMsgId] = useState<string | null>(null);
   const [selectedCategoryQuiz, setSelectedCategoryQuiz] = useState<string | null>(null);
   const [addedServiceIds, setAddedServiceIds] = useState<string[]>([]);
-
-  const [mistralModel, setMistralModel] = useState('mistral-small-latest');
-  const [mistralApiKey, setMistralApiKey] = useState(() => {
-    return localStorage.getItem('bt_mistral_api_key') || '';
-  });
 
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -47,12 +41,6 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ gender, onSelectService, o
       chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isOpen, loading]);
-
-  const handleSaveApiKey = (key: string) => {
-    setMistralApiKey(key);
-    localStorage.setItem('bt_mistral_api_key', key.trim());
-    setShowSettings(false);
-  };
 
   const handleSpeech = (msgId: string, text: string) => {
     if ('speechSynthesis' in window) {
@@ -103,8 +91,6 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ gender, onSelectService, o
         body: JSON.stringify({
           message: text,
           history: messages,
-          mistralApiKey: mistralApiKey.trim(),
-          mistralModel,
           gender,
         }),
       });
@@ -187,19 +173,12 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ gender, onSelectService, o
                 </div>
                 <span className="text-[10px] text-pink-100 flex items-center gap-1">
                   <Sparkles className="w-3 h-3 text-pink-300 animate-pulse" />
-                  {mistralApiKey ? 'Custom Key Active' : 'Bloom Intelligence Engine'}
+                  Bloom Intelligence Engine
                 </span>
               </div>
             </div>
 
             <div className="flex items-center gap-1">
-              <button
-                onClick={() => setShowSettings(!showSettings)}
-                title="AI Key & Model Configuration"
-                className={`p-2 rounded-full transition ${showSettings ? 'bg-white/30 text-white' : 'hover:bg-white/20 text-white/90'}`}
-              >
-                <Key className="w-4 h-4" />
-              </button>
               <button
                 onClick={() => setIsOpen(false)}
                 className="p-2 rounded-full hover:bg-white/20 text-white transition"
@@ -208,59 +187,6 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ gender, onSelectService, o
               </button>
             </div>
           </div>
-
-          {/* API Key Modal Drawer Inside Chat */}
-          {showSettings && (
-            <div className="bg-[#131C31] p-4 border-b border-pink-500/20 space-y-3 text-xs animate-in slide-in-from-top duration-200">
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-white flex items-center gap-1.5 text-xs">
-                  <Key className="w-3.5 h-3.5 text-pink-400" />
-                  AI Settings
-                </span>
-                <button onClick={() => setShowSettings(false)} className="text-slate-400 hover:text-white">
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-[11px] text-slate-300 font-medium">Model Speed / Preset:</label>
-                <select
-                  value={mistralModel}
-                  onChange={(e) => setMistralModel(e.target.value)}
-                  className="w-full p-2 bg-[#1E293B] border border-pink-500/30 rounded-xl text-white text-xs focus:outline-none"
-                >
-                  <option value="mistral-small-latest">Standard (Fast & Smart)</option>
-                  <option value="mistral-medium-latest">Deep Reasoning Preset</option>
-                  <option value="open-mistral-7b">Lightweight Preset</option>
-                  <option value="mistral-tiny">Ultra Fast Preset</option>
-                </select>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="block text-[11px] text-slate-300 font-medium">API Key (Optional, saved locally):</label>
-                <div className="flex gap-2">
-                  <input
-                    type="password"
-                    placeholder="Paste your API key (Optional)..."
-                    value={mistralApiKey}
-                    onChange={(e) => handleSaveApiKey(e.target.value)}
-                    className="flex-1 p-2 bg-[#1E293B] border border-pink-500/30 text-white rounded-xl text-xs font-mono"
-                  />
-                  {mistralApiKey && (
-                    <button
-                      onClick={() => handleSaveApiKey('')}
-                      className="px-2.5 py-1 bg-rose-950 text-rose-300 rounded-xl border border-rose-500/30 text-[10px] font-bold"
-                    >
-                      Clear
-                    </button>
-                  )}
-                </div>
-              </div>
-              <p className="text-[10px] text-slate-400 italic">
-                * Note: The chatbot uses our built-in Bloom Intelligence Engine smoothly by default.
-              </p>
-            </div>
-          )}
 
           {/* Quick Consultation Interactive Quiz Bar */}
           <div className="bg-[#131C31]/90 px-3 py-2 border-b border-pink-500/20 flex items-center justify-between shrink-0 gap-1 overflow-x-auto scrollbar-none text-[10px]">
@@ -501,4 +427,3 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({ gender, onSelectService, o
     </>
   );
 };
-
