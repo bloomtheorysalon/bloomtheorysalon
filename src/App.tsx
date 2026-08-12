@@ -16,6 +16,7 @@ import { AdminPanel } from './components/AdminPanel';
 import { AIChatbot } from './components/AIChatbot';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { Logo } from './components/Logo';
+import { apiUrl } from './api';
 import { Phone, Mail, MapPin, ExternalLink, Shield, Sparkles, Heart } from 'lucide-react';
 
 export default function App() {
@@ -74,7 +75,7 @@ export default function App() {
   // Sync services with central server so owner price edits reflect for all users
   const fetchServerData = async () => {
     try {
-      const res = await fetch('/api/services');
+      const res = await fetch(apiUrl('/api/services'));
       if (res.ok) {
         const data = await res.json();
         if (data.services && Array.isArray(data.services) && data.services.length > 0) {
@@ -82,7 +83,7 @@ export default function App() {
         } else {
           // If server has no store yet, seed the server store with initial default catalog
           const initialCatalog = [...INITIAL_WOMEN_SERVICES, ...INITIAL_MEN_SERVICES];
-          fetch('/api/services', {
+          fetch(apiUrl('/api/services'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ services: initialCatalog }),
@@ -111,7 +112,7 @@ export default function App() {
     localStorage.setItem('bt_salon_services', JSON.stringify(updatedServices));
 
     // Broadcast to central backend
-    fetch('/api/services', {
+    fetch(apiUrl('/api/services'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ services: updatedServices }),
@@ -121,7 +122,7 @@ export default function App() {
   // Update Salon Info centrally
   const handleUpdateSalonInfo = (updatedInfo: SalonInfo) => {
     setSalonInfo(updatedInfo);
-    fetch('/api/salon-info', {
+    fetch(apiUrl('/api/salon-info'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ salonInfo: updatedInfo }),
